@@ -1,3 +1,6 @@
+const path = require('path')
+const { generateDataPoints, generateRandomNumberBetween} = require(path.join(__dirname, './', 'helperFunctions'))
+
 class Node {
   constructor(data) {
     this.data = data
@@ -53,24 +56,23 @@ class BinarySearchTree {
   }
 
   minValue(node = this.root) {
-    if(node.left) {
-      this.minValue(node.left)
-    } else {
-      return node.data
-    }
-  }
 
-  maxValue(node = this.root) {
-    if(node.right) {
-      this.minValue(node.right)
+    if(node.left) {
+      return this.minValue(node.left)
     } else {
       console.log(node.data)
       return node.data
     }
   }
 
-
-
+  maxValue(node = this.root) {
+    console.log(node)
+    if(node.right) {
+      this.minValue(node.right)
+    } else {
+      return node.data
+    }
+  }
 
   inOrder() {
 
@@ -87,6 +89,27 @@ class BinarySearchTree {
     return results
 
   }
+
+search(data, node = this.root) {
+    if(node === null) {
+      return -1
+    } else if(data < node.data) {
+      return this.search(data, node.left)
+    } else if(data > node.data) {
+      return this.search(data, node.right)
+    } else if (node.data === data) {
+      return node.data
+    }
+}
+
+  static generate(size) {
+    const binarySearchTree = new BinarySearchTree()
+    const data = generateDataPoints(size)
+    const min = Math.min(...data)
+    data.forEach(e => binarySearchTree.addNode(e))
+    return binarySearchTree
+  }
+
 
 }
 

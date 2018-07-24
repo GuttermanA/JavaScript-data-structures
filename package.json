@@ -4,6 +4,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "string-hash": "^1.1.3"
   }
 }
