@@ -60,22 +60,19 @@ class BinarySearchTree {
     if(node.left) {
       return this.minValue(node.left)
     } else {
-      console.log(node.data)
       return node.data
     }
   }
 
   maxValue(node = this.root) {
-    console.log(node)
     if(node.right) {
-      this.minValue(node.right)
+      this.maxValue(node.right)
     } else {
       return node.data
     }
   }
 
   inOrder() {
-
     const traverse = (node) => {
       node.left && traverse(node.left);
       results.push(node.data);
@@ -87,7 +84,6 @@ class BinarySearchTree {
     let currentNode = this.root
     traverse(currentNode)
     return results
-
   }
 
 search(data, node = this.root) {
