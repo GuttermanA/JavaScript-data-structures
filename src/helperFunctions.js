@@ -18,7 +18,15 @@ const generateDataPoints = (n) => {
   return shuffledRange.slice(0, n)
 }
 
+const removeElement = (array, index) => {
+  if(index > -1) {
+    array.splice(index, 1)
+  }
+  return array
+}
+
 module.exports = {
   generateRandomNumberBetween,
-  generateDataPoints
+  generateDataPoints,
+  removeElement
 }

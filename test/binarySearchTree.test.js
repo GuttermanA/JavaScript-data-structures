@@ -44,7 +44,7 @@ describe('BinarySearchTree', function () {
       const binarySearchTree = new BinarySearchTree(5)
       binarySearchTree.addNode(6)
       binarySearchTree.addNode(12)
-          binarySearchTree.addNode(55)
+      binarySearchTree.addNode(55)
       assert.equal(binarySearchTree.minValue(), binarySearchTree.root.data)
     })
 
@@ -56,7 +56,6 @@ describe('BinarySearchTree', function () {
 
       data.forEach(e => binarySearchTree.addNode(e))
       const minValue = binarySearchTree.minValue()
-      console.log(minValue, min)
       assert.equal(binarySearchTree.minValue(), min)
     })
   })

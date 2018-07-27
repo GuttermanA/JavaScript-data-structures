@@ -1,3 +1,9 @@
+const path = require('path')
+
+const { removeElement } = require(path.join(__dirname, './', 'helperFunctions'))
+
+
+
 class Vertex {
   constructor(data = null) {
     this.edges = []
@@ -15,55 +21,44 @@ class Edge {
 
 class Graph {
   constructor() {
-    this.adjacencyList = {
-      //vertex: [...edges]
-    }
+    this.adjacencyList = {}
     this.weighted = null //If edges are labeled with values, then it is weighted
     this.directed = null //If edges are unidirectional, then it is directed. EX: A has edge to B, but B no edge to A, then directional. If both have an edge to each other then unidirectional
     this.cyclic = null //If
   }
 
-  addVertex(data) {
-    if(!this.adjacencyList[vertex.data]) {
-      new Vertex(data)
-      this.adjacencyList[vertex.data] = []
+  addVertex(vertex) {
+    if(this.adjacencyList[vertex]) {
+      throw new Error('VERTEX ALREADY EXISTS')
     } else {
-      return 'VERTEX ALREADY EXISTS'
+      this.adjacencyList[vertex] = []
+      return this.adjacencyList
     }
-
   }
 
   addEdge(vertex1, vertex2) {
-    let message = null
-    const edges = this.adjacencyList[vertex1]
-    for(let i = 0; i < edges.length; i++) {
-      if(edges[i].vertex1.data === vertex1.data && edges[i].vertex2.data === vertex2.data) {
-        result = 'EDGE ALREADY EXISTS'
-        break
-      }
+    switch (true) {
+      case !this.adjacencyList[vertex1]:
+        throw new Error('STARTING VERTEX DOES NOT EXIST')
+        break;
+      case !this.adjacencyList[vertex2]:
+        throw new Error('ENDING VERTEX DOES NOT EXIST')
+        break;
+      case this.adjacencyList[vertex1].includes(vertex2):
+        throw new Error('EDGE ALREADY EXISTS')
+      default:
+        this.adjacencyList[vertex1].push(vertex2)
+        return this.adjacencyList[vertex1]
     }
-
-    if (!message) {
-      const newEdge = new Edge()
-      this.adjacencyList[vertex1].push()
-    }
-    this.adjacencyList[vertex1].push(vertex2)
   }
 
   adjacent(vertex1, vertex2) {
     // tests whether there is an edge from the vertex x to the vertex y
-    let result = false
-    if(this.adjacencyList[vertex1.data]) {
-      const edges = this.adjacencyList[vertex1.data]
-      for(let i = 0; i < edges.length; i++) {
-        if(edges[i].vertex1.data === vertex1.data && edges[i].vertex2.data === vertex2.data) {
-          result = true
-          break
-        }
-      }
+    if(this.adjacencyList[vertex1].includes(vertex2) || this.adjacencyList[vertex2].includes(vertex1)) {
+      return true
+    } else {
+      return false
     }
-
-    return result
   }
 
   neighbors(vertex) {
@@ -74,12 +69,42 @@ class Graph {
 
   removeVertex(vertex) {
     //removes the vertex x, if it is there
+    if(this.adjacencyList[vertex]) {
+      delete this.adjacencyList[vertex]
+      for(let k in this.adjacencyList) {
+        let index = this.adjacencyList[k].indexOf(vertex)
+        removeElement(this.adjacencyList[k], index)
+      }
+      return this.adjacencyList
+    } else {
+      throw new Error('VERTEX DOES NOT EXIST')
+    }
+  }
+
+  removeEdge(vertex1, vertex2) {
+
+    switch (true) {
+      case !this.adjacencyList[vertex1]:
+        throw new Error('STARTING VERTEX DOES NOT EXIST')
+        break;
+      case !this.adjacencyList[vertex2]:
+        throw new Error('ENDING VERTEX DOES NOT EXIST')
+        break;
+      case !this.adjacencyList[vertex1].includes(vertex2):
+        throw new Error('EDGE DOES NOT EXIST')
+      default:
+        let index = this.adjacencyList[vertex1].indexOf(vertex2)
+        removeElement(this.adjacencyList[vertex1], index)
+        return this.adjacencyList[vertex1]
+    }
 
   }
 
+  breadthFirstTraversal() {
 
+  }
 
-  removeEdge(vertex1, vertex2) {
+  depthFirstTraversal() {
 
   }
 
@@ -99,13 +124,7 @@ class Graph {
 
   }
 
-  breadthFirstTraversal() {
 
-  }
-
-  depthFirstTraversal() {
-
-  }
 
 
 }
