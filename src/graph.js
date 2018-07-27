@@ -62,7 +62,7 @@ class Graph {
   }
 
   neighbors(vertex) {
-    // lists all vertices y such that there is an edge from the vertex x to the vertex y
+    return this.adjacencyList[vertex]
   }
 
 
@@ -100,12 +100,94 @@ class Graph {
 
   }
 
-  breadthFirstTraversal() {
+  breadthFirstTraversal(vertex) {
+    if(!this.adjacencyList[vertex]) {
+      throw new Error('STARTING VERTEX DOES NOT EXIST')
+    }
 
+    //Visited vertices
+    const closed = new Set ()
+    //Unvisited vertices
+    const openQueue = [vertex]
+
+    while(openQueue.length) {
+      const start = openQueue.shift()
+    }
   }
 
-  depthFirstTraversal() {
+  depthFirstTraversal(vertex) {
+    if(!this.adjacencyList[vertex]) {
+      throw new Error('VERTEX DOES NOT EXIST')
+    }
 
+    const closed = new Set()
+    const open = [vertex]
+
+    while(open.length) {
+      let currentNode = open.pop()
+      if(closed.has(currentNode)) {
+        continue
+      }
+
+
+    }
+  }
+
+  findPaths(source, target) {
+    const buildPath = (target, path) => {
+      const result = [];
+
+      while (path.has(target)) {
+        const source = path.get(target);
+        result.push({source, target});
+        target = source;
+      }
+
+      return result.reverse();
+    }
+
+    if(!this.adjacencyList[source]) {
+      throw new Error('STARTING VERTEX DOES NOT EXIST')
+    }
+
+    if(!this.adjacencyList[target]) {
+      throw new Error('ENDING VERTEX DOES NOT EXIST')
+    }
+    //BREADTH FIRST SEARCH
+    //Visited vertices
+    const closed = new Set ()
+    //Unvisited vertices
+    const open = [source]
+    // Map that will house all paths
+    const paths = new Map()
+
+    while(open.length) {
+      const start = open.shift();
+
+      if (start === target) {
+        return buildPath(start, path);
+      }
+
+      for (const next of this.adjacencyList[start]) {
+        if (closed.has(next)) {
+          continue;
+        }
+
+        if (!open.includes(next)) {
+          path.set(next, start);
+          queue.push(next);
+        }
+      }
+
+      visited.add(start);
+    }
+
+    return null;
+  }
+
+
+  visitEdges(vertex) {
+    this.adjacencyList[vertex]
   }
 
   getVertexValue(vertex1, vertex2) {
