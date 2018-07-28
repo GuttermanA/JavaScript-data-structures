@@ -1,4 +1,4 @@
-const shuffleArray = (array) => {
+export const shuffleArray = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
@@ -6,11 +6,11 @@ const shuffleArray = (array) => {
     return array
 }
 
-const generateRandomNumberBetween = (min, max) => {
+export const generateRandomNumberBetween = (min, max) => {
   return Math.floor(Math.random() * max) + min
 }
 
-const generateDataPoints = (n) => {
+export const generateDataPoints = (n) => {
   //Array from 1 to 100
   const range = Array.from({length: 100}, (v, k) => k+1)
 
@@ -18,15 +18,17 @@ const generateDataPoints = (n) => {
   return shuffledRange.slice(0, n)
 }
 
-const removeElement = (array, index) => {
+export const removeElement = (array, index) => {
   if(index > -1) {
     array.splice(index, 1)
   }
   return array
 }
 
-module.exports = {
-  generateRandomNumberBetween,
-  generateDataPoints,
-  removeElement
-}
+// module.exports = {
+//   generateRandomNumberBetween,
+//   generateDataPoints,
+//   removeElement
+// }
+
+// export { shuffleArray, generateRandomNumberBetween, removeElement }

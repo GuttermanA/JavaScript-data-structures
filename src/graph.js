@@ -1,8 +1,4 @@
-const path = require('path')
-
-const { removeElement } = require(path.join(__dirname, './', 'helperFunctions'))
-
-
+import { removeElement } from './helperFunctions'
 
 class Vertex {
   constructor(data = null) {
@@ -102,17 +98,44 @@ class Graph {
 
   breadthFirstTraversal(vertex) {
     if(!this.adjacencyList[vertex]) {
-      throw new Error('STARTING VERTEX DOES NOT EXIST')
+      throw new Error('VERTEX DOES NOT EXIST')
     }
-
-    //Visited vertices
+    //Visited vertices set
     const closed = new Set ()
-    //Unvisited vertices
+    //Unvisited vertices queue
     const openQueue = [vertex]
+    // Map that will house all paths
+    const paths = new Map()
 
     while(openQueue.length) {
-      const start = openQueue.shift()
+      //Since Queue, first in first out so use shift
+      const start = openQueue.shift();
+
+      // if (start === target) {
+      //   return buildPath(start, path);
+      // }
+
+      //For each edge of current node
+      for (const next of this.adjacencyList[start]) {
+        //finish interation if node has been visited
+        if (closed.has(next)) {
+          continue;
+        }
+
+        //if openQueue does not include the next node, add it to the openQueue and add to the path
+
+        if (!openQueue.includes(next)) {
+          path.set(next, start);
+          openQueue.push(next);
+        }
+      }
+
+
+      //add current node to visited set
+      closed.add(start);
     }
+
+    return paths;
   }
 
   depthFirstTraversal(vertex) {
@@ -120,16 +143,25 @@ class Graph {
       throw new Error('VERTEX DOES NOT EXIST')
     }
 
-    const closed = new Set()
-    const open = [vertex]
+    const closed = new Set ()
+    //Unvisited vertices stack
+    const openStack = [vertex]
+    // Map that will house all paths
+    const paths = new Map()
 
-    while(open.length) {
-      let currentNode = open.pop()
-      if(closed.has(currentNode)) {
-        continue
+    while(openStack.length) {
+      const start = openStack.pop()
+
+      for(const next of this.adjacencyList[start]) {
+        if(closed.has(next)) {
+          continue
+        }
+
+        if(!openStack.includes(next)) {
+          path.set(next, start);
+          openStack.push(next);
+        }
       }
-
-
     }
   }
 
@@ -154,32 +186,32 @@ class Graph {
       throw new Error('ENDING VERTEX DOES NOT EXIST')
     }
     //BREADTH FIRST SEARCH
-    //Visited vertices
+    //Visited vertices set
     const closed = new Set ()
-    //Unvisited vertices
-    const open = [source]
+    //Unvisited vertices queue
+    const openQueue = [vertex]
     // Map that will house all paths
     const paths = new Map()
 
-    while(open.length) {
-      const start = open.shift();
+    while(openQueue.length) {
+      const start = openQueue.shift();
 
-      if (start === target) {
-        return buildPath(start, path);
-      }
+      // if (start === target) {
+      //   return buildPath(start, path);
+      // }
 
       for (const next of this.adjacencyList[start]) {
         if (closed.has(next)) {
           continue;
         }
 
-        if (!open.includes(next)) {
+        if (!openQueue.includes(next)) {
           path.set(next, start);
-          queue.push(next);
+          openQueue.push(next);
         }
       }
 
-      visited.add(start);
+      closed.add(start);
     }
 
     return null;
@@ -211,4 +243,4 @@ class Graph {
 
 }
 
-module.exports = Graph
+export default Graph

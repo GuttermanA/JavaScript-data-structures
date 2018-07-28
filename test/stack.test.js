@@ -1,8 +1,6 @@
-const assert = require('assert')
-// const chai = require('chai')
-const path = require('path')
-const Stack = require(path.join(__dirname, '../src', 'stack'))
-
+import { describe, before, it } from 'mocha';
+import assert from 'assert'
+import Stack from '../src/stack'
 describe('Stack', function () {
 
 })

@@ -1,9 +1,7 @@
-const assert = require('assert')
-// const chai = require('chai')
-const path = require('path')
-const BinarySearchTree = require(path.join(__dirname, '../src', 'binarySearchTree'))
-const { generateDataPoints, generateRandomNumberBetween} = require(path.join(__dirname, '../src', 'helperFunctions'))
-
+import { describe, before, it } from 'mocha';
+import assert from 'assert'
+import BinarySearchTree from '../src/binarySearchTree'
+import { generateDataPoints, generateRandomNumberBetween } from '../src/helperFunctions'
 
 describe('BinarySearchTree', function () {
   describe('#addNode', function () {

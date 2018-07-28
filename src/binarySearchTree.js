@@ -1,5 +1,7 @@
-const path = require('path')
-const { generateDataPoints, generateRandomNumberBetween} = require(path.join(__dirname, './', 'helperFunctions'))
+// const path = require('path')
+// const { generateDataPoints, generateRandomNumberBetween} = require(path.join(__dirname, './', 'helperFunctions'))
+
+import { generateDataPoints, generateRandomNumberBetween } from './helperFunctions'
 
 class Node {
   constructor(data) {

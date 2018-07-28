@@ -1,7 +1,6 @@
-const assert = require('assert')
-// const chai = require('chai')
-const path = require('path')
-const Graph = require(path.join(__dirname, '../src', 'graph'))
+import { describe, before, it } from 'mocha';
+import assert from 'assert'
+import Graph from '../src/graph'
 
 describe('Graph', function () {
 
