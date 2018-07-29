@@ -15,11 +15,31 @@ class Edge {
   }
 }
 
+//Used during traversal to create an array of path objects with a start and end vertex
+const buildPath = (vertex, path) => {
+  //path is a JS map object
+  const result = [];
+
+  while (path.has(vertex)) {
+    //Retrieves the endpoint for the given vertex
+    const source = path.get(vertex);
+    //Adds the edge to the result set
+    result.push({source, vertex});
+    //Sets the endpoint to the new vertex to search on
+    vertex = source;
+  }
+
+  //Loop terminates if there is no value associated with the vertex key
+
+  //Reverse the results because loop starts from the end of the path and works its way backwards
+  return result.reverse();
+}
+
 class Graph {
-  constructor() {
+  constructor(directed = true) {
     this.adjacencyList = {}
     this.weighted = null //If edges are labeled with values, then it is weighted
-    this.directed = null //If edges are unidirectional, then it is directed. EX: A has edge to B, but B no edge to A, then directional. If both have an edge to each other then unidirectional
+    this.directed = directed //If edges are unidirectional, then it is directed. EX: A has edge to B, but B no edge to A, then directional. If both have an edge to each other then unidirectional
     this.cyclic = null //If
   }
 
@@ -42,8 +62,17 @@ class Graph {
         break;
       case this.adjacencyList[vertex1].includes(vertex2):
         throw new Error('EDGE ALREADY EXISTS')
+        break;
+      case this.directed && this.adjacencyList[vertex2].includes(vertex1):
+        throw new Error(`EDGE FROM ${vertex2} TO ${vertex1} ALREADY EXISTS AND GRAPH IS DIRECTED`)
+        break;
       default:
-        this.adjacencyList[vertex1].push(vertex2)
+        if(this.directed) {
+          this.adjacencyList[vertex1].push(vertex2)
+        } else {
+          this.adjacencyList[vertex1].push(vertex2)
+          this.adjacencyList[vertex2].push(vertex1)
+        }
         return this.adjacencyList[vertex1]
     }
   }
@@ -67,9 +96,9 @@ class Graph {
     //removes the vertex x, if it is there
     if(this.adjacencyList[vertex]) {
       delete this.adjacencyList[vertex]
-      for(let k in this.adjacencyList) {
-        let index = this.adjacencyList[k].indexOf(vertex)
-        removeElement(this.adjacencyList[k], index)
+      for(const edge in this.adjacencyList) {
+        let index = this.adjacencyList[edge].indexOf(vertex)
+        removeElement(this.adjacencyList[edge], index)
       }
       return this.adjacencyList
     } else {
@@ -89,14 +118,14 @@ class Graph {
       case !this.adjacencyList[vertex1].includes(vertex2):
         throw new Error('EDGE DOES NOT EXIST')
       default:
-        let index = this.adjacencyList[vertex1].indexOf(vertex2)
+        const index = this.adjacencyList[vertex1].indexOf(vertex2)
         removeElement(this.adjacencyList[vertex1], index)
         return this.adjacencyList[vertex1]
     }
 
   }
 
-  breadthFirstTraversal(vertex) {
+  breadthFirstTraversal(vertex, callback) {
     if(!this.adjacencyList[vertex]) {
       throw new Error('VERTEX DOES NOT EXIST')
     }
@@ -111,10 +140,6 @@ class Graph {
       //Since Queue, first in first out so use shift
       const start = openQueue.shift();
 
-      // if (start === target) {
-      //   return buildPath(start, path);
-      // }
-
       //For each edge of current node
       for (const next of this.adjacencyList[start]) {
         //finish interation if node has been visited
@@ -125,7 +150,7 @@ class Graph {
         //if openQueue does not include the next node, add it to the openQueue and add to the path
 
         if (!openQueue.includes(next)) {
-          path.set(next, start);
+          paths.set(next, start);
           openQueue.push(next);
         }
       }
@@ -133,10 +158,16 @@ class Graph {
 
       //add current node to visited set
       closed.add(start);
+      // console.log(closed)
     }
 
-    return paths;
+    // console.log(paths)
+
+    return closed;
   }
+
+  //The real only difference between depth and breadth first traversal is that depth uses a stack to store open vertices
+  //Stacks follow First in First Out method so the last vertex added to the open queue will be visited before vertecies added before
 
   depthFirstTraversal(vertex) {
     if(!this.adjacencyList[vertex]) {
@@ -158,25 +189,21 @@ class Graph {
         }
 
         if(!openStack.includes(next)) {
-          path.set(next, start);
+          paths.set(next, start);
           openStack.push(next);
         }
       }
+      closed.add(start);
+      // console.log(closed)
     }
+
+    // console.log(paths)
+    // console.log(closed)
+    return closed;
   }
 
   findPaths(source, target) {
-    const buildPath = (target, path) => {
-      const result = [];
 
-      while (path.has(target)) {
-        const source = path.get(target);
-        result.push({source, target});
-        target = source;
-      }
-
-      return result.reverse();
-    }
 
     if(!this.adjacencyList[source]) {
       throw new Error('STARTING VERTEX DOES NOT EXIST')
@@ -189,57 +216,92 @@ class Graph {
     //Visited vertices set
     const closed = new Set ()
     //Unvisited vertices queue
-    const openQueue = [vertex]
+    const openQueue = [source]
     // Map that will house all paths
     const paths = new Map()
+    const results = []
 
+    //While there are unvisted vertices
     while(openQueue.length) {
+      //Remove first element in queue to visit
       const start = openQueue.shift();
 
+      //If this vertex is the target, then build and return an array of paths
       // if (start === target) {
       //   return buildPath(start, path);
       // }
 
+      //Otherwise for each vertex connected to start by edges
       for (const next of this.adjacencyList[start]) {
+        //If vertex has already been visited, skip iteration
+        if(next === target) {
+          paths.set(next, start);
+          results.push(buildPath(next, paths))
+        }
         if (closed.has(next)) {
           continue;
         }
-
+        //Otherwise, if the openQueue does not include the vertex
         if (!openQueue.includes(next)) {
-          path.set(next, start);
+          //Create a path between the two vertices
+          paths.set(next, start);
+          //Add to the open queue
           openQueue.push(next);
         }
       }
 
+      //Then add visited vertex to the closed set
       closed.add(start);
     }
-
-    return null;
+    //If all above loops complete, return null since no paths were found
+    return results;
   }
 
+  detectCycle(vertex) {
+    if(!this.adjacencyList[vertex]) {
+      throw new Error('STARTING VERTEX DOES NOT EXIST')
+    }
 
-  visitEdges(vertex) {
-    this.adjacencyList[vertex]
+    if(!Object.keys(this.adjacencyList).length) {
+      throw new Error('GRAPH IS EMPTY')
+    }
+
+    let cycle = false
+
+    const closed = new Set ()
+    //Unvisited vertices stack
+    const openStack = [vertex]
+    // Map that will house all paths
+    const paths = new Map()
+
+    while(openStack.length) {
+      const start = openStack.pop()
+
+      for(const next of this.adjacencyList[start]) {
+
+        if(next === vertex) {
+          cycle = true
+          break
+        }
+
+        if(closed.has(next)) {
+          continue
+        }
+
+        if(!openStack.includes(next)) {
+          paths.set(next, start);
+          openStack.push(next);
+        }
+      }
+
+      closed.add(start);
+      // console.log('CLOSED', closed)
+    }
+
+    this.cyclic = cycle
+
+    return cycle
   }
-
-  getVertexValue(vertex1, vertex2) {
-
-  }
-
-  setVertexValue(vertex1, vertex2) {
-
-  }
-
-  getEdgeValue(vertex1, vertex2) {
-
-  }
-
-  setEdgeValue(vertex1, vertex2) {
-
-  }
-
-
-
 
 }
 

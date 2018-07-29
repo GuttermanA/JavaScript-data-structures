@@ -25,10 +25,26 @@ export const removeElement = (array, index) => {
   return array
 }
 
-// module.exports = {
-//   generateRandomNumberBetween,
-//   generateDataPoints,
-//   removeElement
-// }
+export const checkEqualityOfArrays = (arr1, arr2) => {
+  if(arr1.length !== arr2.length) {
+    return false
+  }
 
-// export { shuffleArray, generateRandomNumberBetween, removeElement }
+  for(let i = 0;i < arr1.length; i++) {
+    if(arr1[i] !== arr2[i]) {
+      return false
+    }
+  }
+
+  return true
+}
+
+export const checkEqualityOfSets = (set1, set2) => {
+  if(set1.size !== set2.size) {
+    return false
+  }
+  const arr1 = [...set1]
+  const arr2 = [...set2]
+
+  return checkEqualityOfArrays(arr1, arr2)
+}

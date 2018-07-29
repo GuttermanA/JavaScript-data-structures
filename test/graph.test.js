@@ -1,6 +1,7 @@
 import { describe, before, it } from 'mocha';
 import assert from 'assert'
 import Graph from '../src/graph'
+import { checkEqualityOfSets } from '../src/helperFunctions'
 
 describe('Graph', function () {
 
@@ -53,9 +54,9 @@ describe('Graph', function () {
       graph.addVertex('A')
       graph.addVertex('B')
       graph.addEdge('A', 'B')
-      graph.addEdge('B', 'A')
+      // graph.addEdge('B', 'A')
       assert.equal(graph.adjacencyList['A'].includes('B'), true)
-      assert.equal(graph.adjacencyList['B'].includes('A'), true)
+      // assert.equal(graph.adjacencyList['B'].includes('A'), true)
     })
   })
 
@@ -65,7 +66,7 @@ describe('Graph', function () {
     graph.addVertex('B')
     graph.addVertex('C')
     graph.addEdge('A', 'B')
-    graph.addEdge('B', 'A')
+    // graph.addEdge('B', 'A')
     graph.addEdge('B', 'C')
     it('returns true if given share any edge', function () {
       assert.equal(graph.adjacent('A',  'B'), true)
@@ -86,7 +87,7 @@ describe('Graph', function () {
     graph.addVertex('B')
     graph.addVertex('C')
     graph.addEdge('A', 'B')
-    graph.addEdge('B', 'A')
+    // graph.addEdge('B', 'A')
     graph.addEdge('B', 'C')
     it('throws an error if the given vertex does not exist in the adjacency list', function () {
       assert.throws(function () {graph.removeVertex('Z')})
@@ -109,7 +110,7 @@ describe('Graph', function () {
     graph.addVertex('B')
     graph.addVertex('C')
     graph.addEdge('A', 'B')
-    graph.addEdge('B', 'A')
+    // graph.addEdge('B', 'A')
     graph.addEdge('B', 'C')
     describe('Errors', function () {
       const graph = new Graph()
@@ -135,9 +136,117 @@ describe('Graph', function () {
       assert.equal(graph.adjacencyList['A'].includes('B'), false)
     })
 
-    it('does not remove the edge from the edges array of the vertex2 parameter', function () {
-      assert.equal(graph.adjacencyList['B'].includes('A'), true)
+    // it('does not remove the edge from the edges array of the vertex2 parameter', function () {
+    //   assert.equal(graph.adjacencyList['B'].includes('A'), true)
+    // })
+
+  })
+
+  describe('#detectCycle', function () {
+    const graph = new Graph()
+    graph.addVertex('A')
+    graph.addVertex('B')
+    graph.addVertex('C')
+    graph.addVertex('D')
+    graph.addVertex('E')
+    graph.addVertex('F')
+    graph.addVertex('G')
+    graph.addVertex('H')
+    graph.addEdge('A', 'B')
+    graph.addEdge('B', 'C')
+    graph.addEdge('C', 'A')
+    graph.addEdge('C', 'D')
+    graph.addEdge('C', 'E')
+    graph.addEdge('E', 'F')
+    graph.addEdge('F', 'G')
+    graph.addEdge('G', 'H')
+
+    it('will return true if the graph has a cycle', function () {
+      assert.equal(graph.detectCycle('A'), true)
     })
 
+    it('will return false if the graph has no cycle', function () {
+      graph.removeEdge('C', 'A')
+      assert.equal(graph.detectCycle('A'), false)
+    })
+  })
+
+  describe('#depthFirstTraversal', function () {
+    const graph = new Graph()
+    graph.addVertex('A')
+    graph.addVertex('B')
+    graph.addVertex('C')
+    graph.addVertex('D')
+    graph.addVertex('E')
+    graph.addVertex('F')
+    graph.addVertex('G')
+    graph.addVertex('H')
+    graph.addEdge('A', 'B')
+    graph.addEdge('B', 'C')
+    // graph.addEdge('C', 'A')
+    graph.addEdge('C', 'D')
+    graph.addEdge('C', 'E')
+    graph.addEdge('E', 'F')
+    graph.addEdge('F', 'G')
+    graph.addEdge('G', 'H')
+
+    it('should explore as far as possible before backtracking', function () {
+      const result = graph.depthFirstTraversal('A')
+      const answer = new Set (['A', 'B', 'C', 'E', 'F', 'G', 'H', 'D'])
+      assert.equal(checkEqualityOfSets(result, answer), true)
+    })
+  })
+
+  describe('#breadFirstTraversal', function () {
+    const graph = new Graph()
+    graph.addVertex('A')
+    graph.addVertex('B')
+    graph.addVertex('C')
+    graph.addVertex('D')
+    graph.addVertex('E')
+    graph.addVertex('F')
+    graph.addVertex('G')
+    graph.addVertex('H')
+    graph.addEdge('A', 'B')
+    graph.addEdge('B', 'C')
+    graph.addEdge('C', 'A')
+    graph.addEdge('C', 'D')
+    graph.addEdge('C', 'E')
+    graph.addEdge('E', 'F')
+    graph.addEdge('F', 'G')
+    graph.addEdge('G', 'H')
+
+    it('should explore all edges associted with a vertex before moving to the next vertex', function () {
+      const result = graph.breadthFirstTraversal('A')
+      const answer = new Set(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'])
+      assert.equal(checkEqualityOfSets(result, answer), true)
+    })
+  })
+
+
+  describe('#findPath', function () {
+    it('returns the correct number of paths between two vertices', function () {
+      const graph = new Graph()
+      graph.addVertex('A')
+      graph.addVertex('B')
+      graph.addVertex('C')
+      graph.addVertex('D')
+      graph.addVertex('E')
+      graph.addVertex('F')
+      graph.addVertex('G')
+      graph.addVertex('H')
+      graph.addEdge('A', 'B')
+      graph.addEdge('B', 'C')
+      graph.addEdge('C', 'A')
+      graph.addEdge('C', 'D')
+      graph.addEdge('C', 'E')
+      graph.addEdge('E', 'F')
+      graph.addEdge('F', 'G')
+      graph.addEdge('G', 'H')
+      graph.addEdge('B', 'H')
+      graph.addEdge('C', 'H')
+      // console.log(graph.findPaths('A', 'H'))
+      assert.equal(graph.findPaths('A', 'H').length, 3)
+    })
   })
 })

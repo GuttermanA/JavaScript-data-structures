@@ -1,7 +1,7 @@
 import { describe, before, it } from 'mocha';
 import assert from 'assert'
-import BinarySearchTree from '../src/binarySearchTree'
-import { generateDataPoints, generateRandomNumberBetween } from '../src/helperFunctions'
+import {BinarySearchTree, Node} from '../src/binarySearchTree'
+import { generateDataPoints, generateRandomNumberBetween, checkEqualityOfArrays } from '../src/helperFunctions'
 
 describe('BinarySearchTree', function () {
   describe('#addNode', function () {
@@ -110,5 +110,76 @@ describe('BinarySearchTree', function () {
     })
   })
 
+  describe('#valid', function () {
+    const binarySearchTree = new BinarySearchTree(5)
+    binarySearchTree.addNode(1)
+    binarySearchTree.addNode(6)
+    binarySearchTree.addNode(12)
+    binarySearchTree.addNode(3)
+    binarySearchTree.addNode(2)
+    binarySearchTree.addNode(55)
+    binarySearchTree.addNode(8)
+    it('returns true if it is a valid binary search tree', function () {
+      assert.equal(binarySearchTree.valid(), true)
+    })
+
+    it('returns false if it is not valid binary search tree', function () {
+      const node = binarySearchTree.addNode(10)
+      node.left = new Node(35)
+      // binarySearchTree.inOrder()
+      assert.equal(binarySearchTree.valid(), false)
+    })
+  })
+
+  describe('#breadthFirst', function () {
+    const binarySearchTree = new BinarySearchTree(5)
+    binarySearchTree.addNode(1)
+    binarySearchTree.addNode(6)
+    binarySearchTree.addNode(12)
+    binarySearchTree.addNode(3)
+    binarySearchTree.addNode(2)
+    binarySearchTree.addNode(55)
+    binarySearchTree.addNode(8)
+    it('starting with the root, it visits each node in the tree on each level before moving to the next level', function () {
+      const answer = [5, 1, 6, 3, 12, 2, 8, 55]
+      const result = binarySearchTree.breadthFirst()
+      console.log(result)
+      assert.equal(checkEqualityOfArrays(result, answer), true)
+    })
+  })
+
+  describe('#preOrder', function () {
+    const binarySearchTree = new BinarySearchTree(5)
+    binarySearchTree.addNode(1)
+    binarySearchTree.addNode(6)
+    binarySearchTree.addNode(12)
+    binarySearchTree.addNode(3)
+    binarySearchTree.addNode(2)
+    binarySearchTree.addNode(55)
+    binarySearchTree.addNode(8)
+    it('starting with the root, it visits all nodes on the left, then goes back up the tree to visit all nodes on the right', function () {
+      const answer = [5, 1, 3, 2, 6, 12, 8, 55]
+      const result = binarySearchTree.preOrder()
+      console.log(result)
+      assert.equal(checkEqualityOfArrays(result, answer), true)
+    })
+  })
+
+  describe('#postOrder', function () {
+    const binarySearchTree = new BinarySearchTree(5)
+    binarySearchTree.addNode(1)
+    binarySearchTree.addNode(6)
+    binarySearchTree.addNode(12)
+    binarySearchTree.addNode(3)
+    binarySearchTree.addNode(2)
+    binarySearchTree.addNode(55)
+    binarySearchTree.addNode(8)
+    it('visits the left subtree, the right subtree, and then the root node', function () {
+      const answer = [2, 3, 1, 8, 55, 12, 6, 5]
+      const result = binarySearchTree.postOrder()
+      console.log(result)
+      assert.equal(checkEqualityOfArrays(result, answer), true)
+    })
+  })
 
 })

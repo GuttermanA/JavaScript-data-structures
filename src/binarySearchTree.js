@@ -3,7 +3,7 @@
 
 import { generateDataPoints, generateRandomNumberBetween } from './helperFunctions'
 
-class Node {
+export class Node {
   constructor(data) {
     this.data = data
     this.right = null
@@ -11,7 +11,7 @@ class Node {
   }
 }
 
-class BinarySearchTree {
+export class BinarySearchTree {
   constructor(root) {
     this.root = root ? new Node(root) : null
   }
@@ -38,7 +38,7 @@ class BinarySearchTree {
 
     if(data > node.data) {
       if(node.right) {
-        this.addNode(data, node.right)
+        return this.addNode(data, node.right)
       } else {
         node.right = new Node(data)
         newNode = node.right
@@ -47,7 +47,7 @@ class BinarySearchTree {
 
     if(data < node.data) {
       if(node.left) {
-        this.addNode(data, node.left)
+        return this.addNode(data, node.left)
       } else {
         node.left = new Node(data)
         newNode = node.left
@@ -75,20 +75,45 @@ class BinarySearchTree {
   }
 
   inOrder() {
+
     const traverse = (node) => {
+      // console.log(node.data)
       node.left && traverse(node.left);
       results.push(node.data);
       node.right && traverse(node.right);
     }
 
     let results = []
-
-    let currentNode = this.root
-    traverse(currentNode)
+    traverse(this.root)
     return results
   }
 
-search(data, node = this.root) {
+  preOrder() {
+    const traverse = (node) => {
+      results.push(node.data);
+      node.left && traverse(node.left);
+      node.right && traverse(node.right);
+    }
+
+    let results = []
+    traverse(this.root)
+    return results
+  }
+
+  postOrder() {
+    const traverse = (node) => {
+      // console.log(node.data)
+      node.left && traverse(node.left);
+      node.right && traverse(node.right);
+      results.push(node.data);
+    }
+
+    let results = []
+    traverse(this.root)
+    return results
+  }
+
+  search(data, node = this.root) {
     if(node === null) {
       return -1
     } else if(data < node.data) {
@@ -98,7 +123,48 @@ search(data, node = this.root) {
     } else if (node.data === data) {
       return node.data
     }
-}
+  }
+
+  breadthFirst() {
+
+    const openQueue = [this.root]
+    const visited = []
+    //BREADTH FIRST SEARCH
+    while(openQueue.length) {
+      const currentNode = openQueue.shift()
+
+      if(currentNode.left) {
+        openQueue.push(currentNode.left)
+      }
+      if(currentNode.right) {
+        openQueue.push(currentNode.right)
+      }
+      visited.push(currentNode.data)
+    }
+    return visited
+  }
+
+  valid(node = this.root) {
+
+    const openQueue = [node]
+
+    //BREADTH FIRST SEARCH
+    while(openQueue.length) {
+      const currentNode = openQueue.shift()
+
+      if((currentNode.left && currentNode.left.data > currentNode.data) || (currentNode.right && currentNode.right.data < currentNode.data)) {
+        return false
+      }
+
+      if(currentNode.left) {
+        openQueue.push(currentNode.left)
+      }
+      if(currentNode.right) {
+        openQueue.push(currentNode.right)
+      }
+    }
+    return true
+  }
 
   static generate(size) {
     const binarySearchTree = new BinarySearchTree()
@@ -111,4 +177,4 @@ search(data, node = this.root) {
 
 }
 
-module.exports = BinarySearchTree
+// export default BinarySearchTree
