@@ -37,33 +37,67 @@ class BinaryHeap {
     }
 
     return this.nodes
-
     //This alogrithm is O(log n) because we visit levels in the tree, rather than each node individually on each iteration
+  }
+
+  pop() {
+    if(!this.nodes.length) {
+      throw new Error('HEAP IS EMPTY')
+    }
+    //Store element to be removed
+    const removedNode = this.nodes[0]
+    //Get last element of the array
+    const last = this.nodes.pop()
+    //starting index is 0
+    let currentIndex = 0
+    //starting left child index is 1
+    let leftChildIndex = 1
+    //starting right child is 2
+    let rightChildIndex = 2
+    if(this.nodes.length > 1) {
+      //Replace first element with last element
+      this.nodes[0] = last
+      console.log(this.nodes)
+      //While either the left or right child node exist and either one is greater than the parent node
+      while((this.nodes[leftChildIndex] && this.nodes[currentIndex] < this.nodes[leftChildIndex]) || (this.nodes[rightChildIndex] && this.nodes[currentIndex] < this.nodes[rightChildIndex])) {
+        //if the current node is less than the left node and the left node is greater than the right node
+        if(this.nodes[currentIndex] < this.nodes[leftChildIndex] && this.nodes[leftChildIndex] > this.nodes[rightChildIndex]) {
+          //swap them
+          swap(this.nodes, currentIndex, leftChildIndex)
+          //set the current node index to the left child index
+          currentIndex = leftChildIndex
+          //find the left and right child indexes of the new current index
+          leftChildIndex = (2*(1+currentIndex)) - 1
+          rightChildIndex = leftChildIndex + 1
+        } else {
+          //optherwise do the same above, except swap with the right node
+          swap(this.nodes, currentIndex, rightChildIndex)
+          currentIndex = rightChildIndex
+          leftChildIndex = (2*(1+currentIndex)) - 1
+          rightChildIndex = leftChildIndex + 1
+        }
+        console.log(this.nodes)
+      }
+    }
+    return removedNode
   }
 
   //MUST FINISH
 
-  remove() {
-    if(!this.nodes.length) {
-      throw new Error('HEAP IS EMPTY')
-    }
-
-    //set variable for first node of the array
-    const removedNode = this.nodes[0]
-    //set first element of the removed last element of the array
-    this.nodes[0] = this.nodes.pop()
-    //starting at the first element in the array
-    let currentIndex = 0
-    //get left child index
-    let leftIndex = (2*1+currentIndex) - 1
-    //get right child index
-    let rightIndex = leftIndex + 1
-    let currentChildIndex = null
-    while(this.nodes[currentIndex] < this.nodes[leftIndex] || this.nodes[rightIndex])
-
-    return removedNode
+  remove(data) {
+    // if(!this.nodes.length) {
+    //   throw new Error('HEAP IS EMPTY')
+    // }
+    // let currentNodeIndex = 0
+    // while(data !== currentNode) {
+    //   if(data < currentNode) {
+    //
+    //   }
+    // }
 
   }
+
+  //usings a technique called sinking where the last element in the queue replaces the first element and then sinks down until the highest value in the array is first
 
 
 }

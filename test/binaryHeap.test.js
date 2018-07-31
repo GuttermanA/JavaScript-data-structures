@@ -16,13 +16,19 @@ describe('maximal binaryHeap', function () {
     })
   })
 
-  describe('#remove', function () {
+  describe('#pop', function () {
     const binaryHeap = new BinaryHeap()
     binaryHeap.nodes = [100, 19, 36, 17, 3, 25, 1, 2, 7]
+    //Below for progression of sinking down from pop
+    // [19, 36, 17, 3, 25, 1, 2, 7]
+    // [7, 19, 36, 17, 3, 25, 1, 2]
+    // [36, 19, 7, 17, 3, 25, 1, 2]
+    // [36, 19, 25, 17, 3, 7, 1, 2]
     it('reoraganizes the heap correctly after the root value is removed', function () {
-      // const answer
-      // const result = binaryHeap.remove()
-      // assert.equal(checkEqualityOfArrays(result, answer), true)
+      const answer = [36, 19, 25, 17, 3, 7, 1, 2]
+      binaryHeap.pop()
+      const result = binaryHeap.nodes
+      assert.equal(checkEqualityOfArrays(result, answer), true)
     })
   })
 })
