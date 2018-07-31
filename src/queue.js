@@ -1,4 +1,4 @@
-import { Node } from './LinkedList'
+import { Node } from './linkedList'
 
 
 //First in first out (FIFO)

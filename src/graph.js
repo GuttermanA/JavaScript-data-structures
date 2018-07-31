@@ -265,9 +265,6 @@ class Graph {
     if(!Object.keys(this.adjacencyList).length) {
       throw new Error('GRAPH IS EMPTY')
     }
-
-    let cycle = false
-
     const closed = new Set ()
     //Unvisited vertices stack
     const openStack = [vertex]
@@ -278,10 +275,10 @@ class Graph {
       const start = openStack.pop()
 
       for(const next of this.adjacencyList[start]) {
-
+        //If the next vertex is the starting vertex, the graph is cyclical
         if(next === vertex) {
-          cycle = true
-          break
+          this.cyclic = true
+          return true
         }
 
         if(closed.has(next)) {
@@ -295,12 +292,11 @@ class Graph {
       }
 
       closed.add(start);
-      // console.log('CLOSED', closed)
     }
 
-    this.cyclic = cycle
 
-    return cycle
+
+    return false
   }
 
 }

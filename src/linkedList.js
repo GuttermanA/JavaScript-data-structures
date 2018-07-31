@@ -30,7 +30,7 @@ export class LinkedList {
   traverse () {
 
     if(!this.length) {
-      return 'LIST EMPTY'
+      return 'LINKED LIST EMPTY'
     }
 
     let currentNode = this.head

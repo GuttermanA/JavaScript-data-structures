@@ -1,6 +1,6 @@
 import { describe, before, it } from 'mocha';
 import assert from 'assert'
-import LinkedList from '../src/linkedList'
+import {LinkedList} from '../src/linkedList'
 
 describe('LinkedList', function () {
 
