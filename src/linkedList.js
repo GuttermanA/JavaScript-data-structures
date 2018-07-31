@@ -1,14 +1,14 @@
-class Node {
+export class Node {
   constructor(data) {
     this.data = data
     this.next = null
   }
 }
 
-class LinkedList {
+export class LinkedList {
   constructor(data) {
     this.head = data ? new Node(data) : null
-    this.length = this.head ? 1 : null
+    this.length = this.head ? 1 : 0
   }
 
   addNode(data) {
@@ -82,5 +82,3 @@ class LinkedList {
     this.head = null
   }
 }
-
-export default LinkedList
