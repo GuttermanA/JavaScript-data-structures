@@ -1,5 +1,9 @@
 // const path = require('path')
 // const { generateDataPoints, generateRandomNumberBetween} = require(path.join(__dirname, './', 'helperFunctions'))
+//Balance vs inbalanced: Balanced trees maintain an O(log n) times for insert and find. Usually balance means heights of two subtrees only differ by 1
+//Complete: every level is filled, except possible the the last level. Filled from left to right
+//Full: in which every node has either zero or two children. No single child nodes
+//Perfect: full and complete. All leaf nodes at the same level and the leaf level has maximum nodes
 
 import { generateDataPoints, generateRandomNumberBetween } from './helperFunctions'
 
@@ -68,12 +72,13 @@ export class BinarySearchTree {
 
   maxValue(node = this.root) {
     if(node.right) {
-      this.maxValue(node.right)
+      return this.maxValue(node.right)
     } else {
       return node.data
     }
   }
 
+  //Left branch, then root, then right branch
   inOrder() {
 
     const traverse = (node) => {
@@ -88,6 +93,7 @@ export class BinarySearchTree {
     return results
   }
 
+  //Visits the current node before its child nodes, root is visited then left subtree then right subtree
   preOrder() {
     const traverse = (node) => {
       results.push(node.data);
@@ -98,8 +104,13 @@ export class BinarySearchTree {
     let results = []
     traverse(this.root)
     return results
+
+    // callback(node.data)
+    // node.left && traverse(node.left);
+    // node.right && traverse(node.right);
   }
 
+  //Visits left then right then root node
   postOrder() {
     const traverse = (node) => {
       // console.log(node.data)

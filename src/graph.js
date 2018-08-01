@@ -238,6 +238,7 @@ class Graph {
           paths.set(next, start);
           results.push(buildPath(next, paths))
         }
+        //If vertex has already been visited, skip iteration
         if (closed.has(next)) {
           continue;
         }
